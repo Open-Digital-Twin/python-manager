@@ -1,0 +1,9 @@
+version: "3.7"
+services:
+  manager:
+    image: test
+    environment:
+      - API_ADDRESS_CLUSTER=emqx.dtwins
+      - MAX_INFLIGHT=10
+      - MAX_QUEUE=1000
+    restart: always
