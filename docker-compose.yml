@@ -1,9 +1,13 @@
 version: "3.7"
 services:
   manager:
-    image: test
+    image: opendigitaltwin/manager
     environment:
       - API_ADDRESS_CLUSTER=emqx.dtwins
-      - MAX_INFLIGHT=10
-      - MAX_QUEUE=1000
+      - CLUSTER_PORT='18083'
+      - API_ADDRESS_KUBE=someaddress
+      - KUBE_PORT='6443'
+      - MAX_INFLIGHT='10'
+      - MAX_QUEUE='1000'
+      - API_INTERVAL='5'
     restart: always
