@@ -1,7 +1,6 @@
 import requests
-import json
 
-def call_api_cluster(address,port):
+def call_api_metrics(address,port):
     params = {
         "aggregate" : "true"
     }

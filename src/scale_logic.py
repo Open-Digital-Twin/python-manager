@@ -1,11 +1,10 @@
 from kubernetes import client, config
 
 
-def check_params (max_inflight, max_queue, avg_inflight, avg_queue):
-
-    print("avg inflight is " + str(avg_inflight) + " (max) " + str(max_inflight))
-    print("avg queue is " + str(avg_queue) + " (max) " + str(max_queue))
-    if(max_inflight < avg_inflight and max_queue < avg_queue):
+def check_params (response_metric, response_nodes, max_queue, max_inflight):
+    metrics = response_metric.json()
+    print("current queue: " + str(metrics['messages.qos1.received'] - metrics['messages.qos1.sent'])) 
+    if (metrics['messages.qos1.received'] - metrics['messages.qos1.sent']) > int(max_queue):
         return True
     return False
 

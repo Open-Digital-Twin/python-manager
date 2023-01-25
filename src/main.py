@@ -1,6 +1,6 @@
 import time
 import os
-from api import call_api_cluster, call_api_nodes
+from api import call_api_metrics, call_api_nodes
 from scale_logic import check_params, scale_cluster
 from kubernetes import client, config
 
@@ -14,29 +14,27 @@ def main():
     max_queue = os.getenv("MAX_QUEUE")
     max_inflight = os.getenv("MAX_INFLIGHT")
     
-    kube_configs = config.load_incluster_config()
-    kube_client = client.AppsV1Api()
+    config.load_incluster_config()
+    kube_client = client.CoreV1Api()
 
     print("starting with cluster address: " + cluster_address + ":" + cluster_port)
     print("kubernetes api address set to: " + kube_address + ":" + kube_port)
     print("max queue set to: " + max_queue + " and max inflight set to: " + max_inflight)
 
     while(True):
-        response_metrics = call_api_cluster(cluster_address,cluster_port)
+        response_metrics = call_api_metrics(cluster_address,cluster_port)
         response_nodes = call_api_nodes(cluster_address,cluster_port)
 
         if (response_metrics.status_code == 200 and response_nodes.status_code == 200):
-            print("Data received :" + str(response_metrics.json()))
-            print("Additional metrics" + str(response_nodes.json()[0]))
-            
-            scale = check_params(int(max_inflight), int(max_queue) , avg_inflight = 10 , avg_queue = 10)
-            if scale == True :
+            #print("Data received :" + str(response_clients.json()["data"]))
+            #print("Additional metrics" + str(response_nodes.json()[0]))
+            if  check_params(response_metrics,response_nodes, max_queue, max_inflight):
                 scale_cluster(kube_client)
-            time.sleep(5)
+            time.sleep(int(api_interval))
 
         else:
             print("error in api request " + str((response_metrics.status_code)) + " "  + str(response_nodes.status_code))
-            time.sleep(5)
+            time.sleep(int(api_interval))
 
 if __name__ == "__main__" :
     main()
