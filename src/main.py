@@ -15,7 +15,7 @@ def main():
     max_inflight = os.getenv("MAX_INFLIGHT")
     
     config.load_incluster_config()
-    kube_client = client.CoreV1Api()
+    kube_client = client.AppsV1Api()
 
     print("starting with cluster address: " + cluster_address + ":" + cluster_port)
     print("kubernetes api address set to: " + kube_address + ":" + kube_port)
