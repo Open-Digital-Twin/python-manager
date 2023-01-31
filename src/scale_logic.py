@@ -2,14 +2,19 @@ from kubernetes import client, config
 import time
 
 
-def check_params (response_metric, response_nodes, max_queue, max_inflight):
-    metrics = response_metric.json()
+def check_params (response_client, response_nodes, max_queue, max_inflight):
+    total_queue = 0
+    metrics = response_client.json()
     nodes = response_nodes.json()
-    print("current queue : " + str(metrics['messages.qos1.received'] - (metrics['messages.qos1.sent'] - metrics['messages.dropped'])))
-    print("average queue : " + str((metrics['messages.qos1.received'] - (metrics['messages.qos1.sent'] - metrics['messages.dropped']))/len(nodes)))
-    print("cluster current size: " + str(len(nodes))) 
-    if (metrics['messages.qos1.received'] - (metrics['messages.qos1.sent']+ metrics['messages.dropped'])/len(nodes) > int(max_queue)):
-        print("returning scale = True")
+    print(metrics)
+    for i in range(len(metrics["data"])):
+    #    print(metrics["data"][i])
+        print(str(i))
+        total_queue = total_queue + metrics["data"][i]["mqueue_len"]
+    print("Current nodes: " + str(len(nodes)))
+    print("Current queue: " + str(total_queue))
+    if (total_queue/len(nodes) > int(max_queue)):
+        print("Returning scale = True")
         return True
     return False
 
@@ -22,8 +27,8 @@ def scale_cluster(kube_client):
             emqx_body.spec.replicas = emqx_body.spec.replicas + 1
             body = emqx_body
             api_response = kube_client.patch_namespaced_stateful_set_scale(name, namespace, body)
-            print("scaling cluster...")
+            print("Scaling cluster...")
             time.sleep(30);
         else :
-            print("maximum cluster size achieved")
-            time.sleep(30)
+            print("Maximum cluster size achieved")
+            time.sleep(10)
