@@ -1,6 +1,6 @@
 import time
 import os
-from api import call_api_metrics, call_api_nodes
+from api import call_api_clients, call_api_nodes
 from scale_logic import check_params, scale_cluster
 from kubernetes import client, config
 
@@ -22,18 +22,18 @@ def main():
     print("max queue set to: " + max_queue + " and max inflight set to: " + max_inflight)
 
     while(True):
-        response_metrics = call_api_metrics(cluster_address,cluster_port)
+        response_clients = call_api_clients(cluster_address,cluster_port)
         response_nodes = call_api_nodes(cluster_address,cluster_port)
 
-        if (response_metrics.status_code == 200 and response_nodes.status_code == 200):
+        if (response_clients.status_code == 200 and response_nodes.status_code == 200):
             #print("Data received :" + str(response_clients.json()["data"]))
             #print("Additional metrics" + str(response_nodes.json()[0]))
-            if  check_params(response_metrics,response_nodes, max_queue, max_inflight):
+            if  check_params(response_clients,response_nodes, max_queue, max_inflight):
                 scale_cluster(kube_client)
             time.sleep(int(api_interval))
 
         else:
-            print("error in api request " + str((response_metrics.status_code)) + " "  + str(response_nodes.status_code))
+            print("error in api request " + str((response_clients.status_code)) + " "  + str(response_nodes.status_code))
             time.sleep(int(api_interval))
 
 if __name__ == "__main__" :
