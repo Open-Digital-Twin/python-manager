@@ -15,7 +15,7 @@ def main():
     max_inflight = os.getenv("MAX_INFLIGHT")
     
     config.load_incluster_config()
-    kube_client = client.CoreV1Api()
+    kube_client = client.AppsV1Api()
 
     print("starting with cluster address: " + cluster_address + ":" + cluster_port)
     print("kubernetes api address set to: " + kube_address + ":" + kube_port)
@@ -27,7 +27,7 @@ def main():
 
         if (response_clients.status_code == 200 and response_nodes.status_code == 200):
             #print("Data received :" + str(response_clients.json()["data"]))
-            #print("Additional metrics" + str(response_nodes.json()[0]))
+            #print("Additional clients" + str(response_nodes.json()[0]))
             if  check_params(response_clients,response_nodes, max_queue, max_inflight):
                 scale_cluster(kube_client)
             time.sleep(int(api_interval))
