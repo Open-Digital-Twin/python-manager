@@ -6,10 +6,8 @@ def check_params (response_client, response_nodes, max_queue, max_inflight):
     total_queue = 0
     metrics = response_client.json()
     nodes = response_nodes.json()
-    print(metrics)
     for i in range(len(metrics["data"])):
-    #    print(metrics["data"][i])
-        print(str(i))
+        print ("Client " + str(metrics["data"][i]["clientid"]) + " Queue : " + str(metrics["data"][i]["mqueue_len"]))
         total_queue = total_queue + metrics["data"][i]["mqueue_len"]
     print("Current nodes: " + str(len(nodes)))
     print("Current queue: " + str(total_queue))
