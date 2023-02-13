@@ -7,10 +7,10 @@ def check_params (response_client, response_nodes, max_queue, max_inflight):
     metrics = response_client.json()
     nodes = response_nodes.json()
     for i in range(len(metrics["data"])):
-        print ("Client " + str(metrics["data"][i]["clientid"]) + " Queue : " + str(metrics["data"][i]["mqueue_len"]))
         total_queue = total_queue + metrics["data"][i]["mqueue_len"]
     print("Current nodes: " + str(len(nodes)))
     print("Current queue: " + str(total_queue))
+    print("Average queue: " + str(total_queue/len(nodes)))
     if (total_queue/len(nodes) > int(max_queue)):
         print("Returning scale = True")
         return True
