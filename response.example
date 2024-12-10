@@ -1,0 +1,25 @@
+{'data': [{'send_msg.dropped.queue_full': 0, 
+           'subscriptions_max': 'infinity', 
+           'recv_oct': 2217059, 
+           'expiry_interval': 0, 
+           'recv_msg.qos1': 0, 
+           'inflight_max': 32, 
+           'listener': 'quic:default', 
+           'clientid': 'mqtt-quic-type-1-sub-0', 
+           'username': 'admin', 'is_bridge': False, 
+           'peersni': None, 'proto_ver': 4, 
+           'auth_expire_at': None, 'subscriptions_cnt': 1, 
+           'send_pkt': 42692, 'durable': False, 
+           'keepalive': 10, 
+           'node': 'emqx@emqx-0.emqx-headless.dtwins.svc.cluster.local', 
+           'recv_msg.dropped': 0, 'send_cnt': 45490, 'mountpoint': None, 
+           'mqueue_max': 1000, 'recv_msg': 0, 'send_msg.qos2': 0, 'enable_authn': True, 
+           'awaiting_rel_max': 100, 'recv_msg.qos0': 0, 'send_oct': 6126262, 
+           'send_msg.dropped.expired': 0, 'created_at': '2024-12-10T00:25:25.475+00:00', 
+           'send_msg.dropped': 0, 'heap_size': 4185, 'clean_start': True, 'send_msg.qos1': 42690, 
+           'recv_pkt': 42692, 'port': 60000, 'awaiting_rel_cnt': 0, 'user_property': {}, 'client_attrs': 
+           {}, 'inflight_cnt': 0, 'connected_at': '2024-12-10T00:25:25.475+00:00', 'is_persistent': False, 'ip_address': 
+           '10.0.10.98', 'send_msg': 42690, 'recv_msg.dropped.await_pubrel_timeout': 0, 'mailbox_len': 0, 
+           'mqueue_len': 0, 'is_expired': False, 'connected': True, 'reductions': 22131126, 
+           'send_msg.dropped.too_large': 0, 'send_msg.qos0': 0, 'recv_msg.qos2': 0, 'mqueue_dropped': 0, 'recv_cnt': 45478, '
+           proto_name': 'MQTT'}], 'meta': {'limit': 100, 'page': 1, 'hasnext': False}}
