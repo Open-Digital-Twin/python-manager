@@ -15,6 +15,7 @@ def main():
     api_interval = os.getenv("API_INTERVAL")
     max_queue = os.getenv("MAX_QUEUE")
     max_inflight = os.getenv("MAX_INFLIGHT")
+    max_size = os.getenv("MAX_SIZE")
     method = os.getenv("METHOD")
 
     
@@ -35,7 +36,7 @@ def main():
             #print("Data received :" + str(response_clients.json()["data"]))
             #print("Additional clients" + str(response_nodes.json()[0]))
             if  check_params(response_clients,response_nodes, max_queue, max_inflight, method):
-                scale_cluster(kube_client)
+                scale_cluster(kube_client, max_size)
             time.sleep(int(api_interval))
 
         else:
