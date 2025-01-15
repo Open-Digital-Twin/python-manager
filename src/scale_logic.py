@@ -16,7 +16,11 @@ def check_params(response_client, response_nodes, max_queue, max_inflight, metho
         queue_total = sum(metric.get("mqueue_len", 0) for metric in metrics["data"])
         inflight_total = sum(metric.get("inflight_cnt", 0) for metric in metrics["data"])
         node_count = len(nodes)
-        
+        if metrics["meta"]["hasnext"]:
+            print("Warning: Metrics have next page")
+        else:
+            print("Warning: Metrics have no next page")
+
         if node_count == 0:  # Prevent division by zero
             print("Warning: No nodes found in cluster")
             return False
@@ -65,6 +69,48 @@ def scale_cluster(kube_client, max_size):
                     return True
                 else:
                     print("Maximum cluster size achieved")
+                    time.sleep(10)
+                    return False
+                    
+            except client.rest.ApiException as e:
+                if attempt < max_retries - 1:  # don't sleep on last attempt
+                    print(f"Kubernetes API error (attempt {attempt + 1}/{max_retries}): {e}")
+                    time.sleep(retry_delay)
+                else:
+                    raise  # re-raise on final attempt
+                    
+    except client.rest.ApiException as e:
+        print(f"Kubernetes API error: {e}")
+        return False
+    except Exception as e:
+        print(f"Unexpected error in scale_cluster: {str(e)}")
+        return False
+    
+
+
+def descale_cluster(kube_client):
+    try:
+        name = 'emqx'
+        namespace = 'dtwins'
+        
+        # Add retry logic for kubernetes operations
+        max_retries = 3
+        retry_delay = 5  # seconds
+        
+        for attempt in range(max_retries):
+            try:
+                emqx_body = kube_client.read_namespaced_stateful_set(name, namespace)
+                
+                if emqx_body.spec.replicas > 1 :
+                    emqx_body.spec.replicas = emqx_body.spec.replicas - 1
+                    api_response = kube_client.patch_namespaced_stateful_set_scale(
+                        name, namespace, emqx_body
+                    )
+                    print(f"Descaling cluster... Current replicas: {emqx_body.spec.replicas}")
+                    time.sleep(30)
+                    return True
+                else:
+                    print("Minimum Cluster Size")
                     time.sleep(10)
                     return False
                     
